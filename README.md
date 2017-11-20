@@ -11,7 +11,7 @@ $ npm install --save https-error
 ```
 
 ```javascript
-const HttpsError = require('https-error');
+var HttpsError = require('https-error');
 
 function sqrt(val) {
 	if (val < 0) {
@@ -21,7 +21,7 @@ function sqrt(val) {
     }
 }
 
-let err = HttpsError.internalServerError('Cannot connect to the database.');
+var err = HttpsError.internalServerError('Cannot connect to the database.');
 
 console.log(err.toString());
 // Error: 500 (Internal Server Error) Cannot connect to the database.
@@ -56,9 +56,9 @@ As you can see, using the factory method...
 You can also pass in an `Error` object...
 
 ```javascript
-let err = new Error('That record already exists.');
+var err = new Error('That record already exists.');
 
-let conflict = HttpsError.conflict(err);
+var conflict = HttpsError.conflict(err);
 
 console.log(conflict.toString());
 // Error: 409 (Conflict) That record already exists.
