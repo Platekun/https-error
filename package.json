@@ -1,5 +1,5 @@
 {
-    "name": "https-error",
+    "name": "https-error-legacy",
     "version": "1.0.2",
     "description": "Provides the HttpsError class and associated factory methods.",
     "main": "https-error.js",
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/fhellwig/https-error"
+        "url": "https://github.com/Platekun/https-error"
     },
     "keywords": [
         "HTTPS",
@@ -19,5 +19,5 @@
     "bugs": {
         "url": "https://github.com/fhellwig/https-error/issues"
     },
-    "homepage": "https://github.com/fhellwig/https-error"
+    "homepage": "https://github.com/Platekun/https-error#README.md"
 }
