@@ -20,9 +20,17 @@
 
 'use strict';
 
-const util = require('util');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-const errors = {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var util = require('util');
+
+var errors = {
     badRequest: {
         code: 400,
         text: "Bad Request"
@@ -190,11 +198,11 @@ const errors = {
 };
 
 // Maps codes to their text description (e.g., 404 -> 'Not Found').
-const byCode = {};
+var byCode = {};
 
 // Populate the byCode object.
-Object.keys(errors).forEach(key => {
-    let error = errors[key];
+Object.keys(errors).forEach(function (key) {
+    var error = errors[key];
     byCode[error.code] = error.text;
 });
 
@@ -204,60 +212,72 @@ function findText(code) {
 }
 
 // The template for the toHtml() method.
-const htmlTemplate =
-    '<div style="font-family:monospace;font-size:1.2em;margin:1em">' +
-    '<p><strong>%d (%s)</strong></p><p>%s</p>' +
-    '</div>';
+var htmlTemplate = '<div style="font-family:monospace;font-size:1.2em;margin:1em">' + '<p><strong>%d (%s)</strong></p><p>%s</p>' + '</div>';
 
-class HttpsError extends Error {
+var HttpsError = function (_Error) {
+    _inherits(HttpsError, _Error);
 
-    constructor(code, message) {
-        super(message);
-        this.name = 'HttpsError';
-        this._code = code;
-        this._text = findText(code);
+    function HttpsError(code, message) {
+        _classCallCheck(this, HttpsError);
+
+        var _this = _possibleConstructorReturn(this, (HttpsError.__proto__ || Object.getPrototypeOf(HttpsError)).call(this, message));
+
+        _this.name = 'HttpsError';
+        _this._code = code;
+        _this._text = findText(code);
+        return _this;
     }
 
-    get code() {
-        return this._code;
-    }
+    _createClass(HttpsError, [{
+        key: 'toString',
+        value: function toString() {
+            return util.format('Error: %d (%s) %s', this.code, this.text, this.message);
+        }
+    }, {
+        key: 'toJson',
+        value: function toJson() {
+            return {
+                status: 'error',
+                code: this.code,
+                text: this.text,
+                message: this.message
+            };
+        }
+    }, {
+        key: 'toHtml',
+        value: function toHtml() {
+            return util.format(htmlTemplate, this.code, this.text, this.message);
+        }
+    }, {
+        key: 'code',
+        get: function get() {
+            return this._code;
+        }
+    }, {
+        key: 'text',
+        get: function get() {
+            return this._text;
+        }
+    }]);
 
-    get text() {
-        return this._text;
-    }
-
-    toString() {
-        return util.format('Error: %d (%s) %s',
-            this.code, this.text, this.message);
-    }
-
-    toJson() {
-        return {
-            status: 'error',
-            code: this.code,
-            text: this.text,
-            message: this.message
-        };
-    }
-
-    toHtml() {
-        return util.format(htmlTemplate, this.code, this.text, this.message);
-    }
-}
+    return HttpsError;
+}(Error);
 
 // Create a static factory method for each error. The factory method takes
 // an error object or one or more arguments that are passed to util.format.
-Object.keys(errors).forEach(key => {
-    let code = errors[key].code;
-    HttpsError[key] = function(err) {
+
+
+Object.keys(errors).forEach(function (key) {
+    var code = errors[key].code;
+    HttpsError[key] = function (err) {
         if (err instanceof Error) {
             return new HttpsError(code, err.message);
         } else {
-            let args = Array.prototype.slice.call(arguments);
-            let message = util.format.apply(util, args);
+            var args = Array.prototype.slice.call(arguments);
+            var message = util.format.apply(util, args);
             return new HttpsError(code, message);
         }
-    }
+    };
 });
 
 module.exports = HttpsError;
